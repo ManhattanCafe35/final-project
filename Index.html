@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>咖啡展示互动页面</title>
+    <style>
+        /* 基本页面样式 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: #f5f5dc;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        /* 初始页面：居中咖啡杯 */
+        .coffee-cup {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: url('https://via.placeholder.com/150?text=Coffee+Cup') no-repeat center center;
+            background-size: contain;
+            cursor: pointer;
+            transition: all 1s ease;
+        }
+        /* 咖啡历史信息区域 */
+        .coffee-history {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 300px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        /* 咖啡豆展示区域 */
+        .coffee-beans {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        .beans-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            width: 100%;
+            height: 100%;
+        }
+        .bean-cell {
+            border: 1px solid #ccc;
+            background: url('https://via.placeholder.com/300?text=Coffee+Bean') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #fff;
+        }
+        /* 咖啡倾倒动画区域 */
+        .pouring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 100%);
+        }
+        /* 咖啡机展示区域 */
+        .coffee-machine {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 200px;
+            display: none;
+            border: 2px solid #333;
+            background: #ddd;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .machine-cell {
+            width: 50%;
+            height: 50%;
+            box-sizing: border-box;
+            border: 1px solid #aaa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 初始咖啡杯 -->
+        <div class="coffee-cup" id="coffeeCup"></div>
+        <!-- 咖啡历史信息 -->
+        <div class="coffee-history" id="coffeeHistory">
+            <h3>咖啡历史</h3>
+            <p>咖啡起源于埃塞俄比亚，经过中东的传播，逐渐风靡全球，成为人们日常生活中的一部分……</p>
+        </div>
+        <!-- 咖啡豆展示 -->
+        <div class="coffee-beans" id="coffeeBeans">
+            <div class="beans-grid">
+                <div class="bean-cell">浓缩</div>
+                <div class="bean-cell">美式</div>
+                <div class="bean-cell">拿铁</div>
+                <div class="bean-cell">卡布奇诺</div>
+            </div>
+        </div>
+        <!-- 咖啡倾倒动画区域 -->
+        <div class="pouring" id="pouring"></div>
+        <!-- 咖啡机展示 -->
+        <div class="coffee-machine" id="coffeeMachine">
+            <div class="machine-cell">美式</div>
+            <div class="machine-cell">拿铁</div>
+            <div class="machine-cell">卡布奇诺</div>
+            <div class="machine-cell">摩卡</div>
+        </div>
+    </div>
+    <script>
+        let stage = 0;
+        const coffeeCup = document.getElementById('coffeeCup');
+        const coffeeHistory = document.getElementById('coffeeHistory');
+        const coffeeBeans = document.getElementById('coffeeBeans');
+        const pouring = document.getElementById('pouring');
+        const coffeeMachine = document.getElementById('coffeeMachine');
+
+        coffeeCup.addEventListener('click', function() {
+            if (stage === 0) {
+                coffeeCup.style.left = '20px';
+                coffeeCup.style.top = '20px';
+                coffeeCup.style.transform = 'none';
+                coffeeHistory.style.opacity = 1;
+                stage = 1;
+            } else if (stage === 1) {
+                coffeeCup.style.transition = 'all 0.5s ease';
+                coffeeCup.style.transform = 'scale(3)';
+                setTimeout(() => {
+                    coffeeCup.style.display = 'none';
+                    coffeeHistory.style.display = 'none';
+                    coffeeBeans.style.display = 'block';
+                    stage = 2;
+                }, 500);
+            }
+        });
+
+        window.addEventListener('wheel', function() {
+            if (stage === 2) {
+                coffeeBeans.style.display = 'none';
+                pouring.style.display = 'block';
+                setTimeout(() => {
+                    pouring.style.display = 'none';
+                    coffeeMachine.style.display = 'flex';
+                    stage = 4;
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
